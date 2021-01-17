@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, StatusBar, StyleSheet, ScrollView, Image, LayoutAnimation, FlatList, UIManager, TouchableOpacity } from 'react-native';
-import { Card, Title, Subheading, } from 'react-native-paper';
+import { Card, Title, Subheading, Button } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ActivityIndicator, Divider } from 'react-native-paper';
@@ -12,9 +12,12 @@ import { Indicator, Pages } from 'react-native-pages';
 
 import { GetTemplates } from '../../services/appraiess/GetTemplates'
 import { FetchKRADetails } from '../../services/appraiess/FetchKRADetails'
-import KRADetail from '../../component/KRADetail'
+import KRADetail from '../../component/KRADetail';
+import { SaveKRADetails } from '../../services/appraiess/SaveKRADetails'
 import allAction from '../../redux/actions';
+import CommentModel from '../../component/CommentModel';
 
+var Weightage = 0
 const PmsHome = (props) => {
 
     const { colors } = useTheme();
@@ -55,7 +58,6 @@ const PmsHome = (props) => {
     }, [])
 
     const changeLayout = (value) => {
-        console.log("mjjjjjj", value);
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         value == 'isExpanded' ?
             setdata({ ...data, isExpanded: !data.isExpanded }) :
@@ -87,6 +89,7 @@ const PmsHome = (props) => {
     }, [data.templates])
 
     const selectedTemplate = (itemValue) => {
+        Weightage = 0
         setdata({
             ...data,
             kraDataVisible: false,
@@ -118,7 +121,11 @@ const PmsHome = (props) => {
         data.templateId != null ? fetchData() : null
     }, [data.templateId])
 
+    useEffect(() => {
+        // console.log("kraaaaaaa", data.kraData);
+    }, [data.kraData])
     const swipeLeft = () => {
+
         if (data.count < data.kraData.KRADetails.length - 1 == true) {
 
             setdata({
@@ -130,7 +137,6 @@ const PmsHome = (props) => {
     }
 
     const swipeRight = () => {
-        console.log(data.count > 0);
         if (data.count > 0) {
             setdata({
                 ...data,
@@ -139,6 +145,128 @@ const PmsHome = (props) => {
             })
         }
     }
+
+    const SaveGoalSetting = async (Status) => {
+        var goalSettingData = []
+        var kraData = data.kraData.KRADetails
+        var formData = data.kraData.FormDetails[0]
+        var commentData = data.kraData.OverallComments[0]
+
+        Object.keys(kraData).map((item, index) => {
+
+            goalSettingData.push({
+                "UserID": commentData.EmployeeID,
+                "TemplateId": commentData.TemplateID,
+                "FormID": commentData.FormID,
+                "RowID": kraData[item].RowID,
+                "AttributeId": kraData[item].AttributeId,
+                "RowID1": kraData[item].RowID1,
+                "AutoId": kraData[item].AutoId,
+                "AspectId": kraData[item].AspectId,
+                "AspectName": kraData[item].AspectName,
+                "LongDesc": kraData[item].LongDesc,
+                "ShortDesc": kraData[item].ShortDesc,
+                "UOMName": kraData[item].UOMName,
+                "TargetDate": kraData[item].TargetDate,
+                "AchievementScale": kraData[item].AchievementScale,
+                "Weightage": kraData[item].Weightage,
+                "YearlyTarget": kraData[item].YearlyTarget,
+                "Quaterly2Weightage": kraData[item].Quaterly2Weightage,
+                "Quaterly2Target": kraData[item].Quaterly2Target,
+                "Quaterly2TargetDate": kraData[item].Quaterly2TargetDate,
+                "SelfAdded": kraData[item].SelfAdded,
+                "MidAdded": kraData[item].MidAdded,
+                "YearlyTargetByMgr": kraData[item].YearlyTargetByMgr,
+                "YearlyTargetByReviewer": kraData[item].YearlyTargetByReviewer == null ? "" : kraData[item].YearlyTargetByReviewer,
+                "TargetDateByMgr": kraData[item].TargetDateByMgr,
+                "TargetDateByReviewer": kraData[item].TargetDateByReviewer,
+                "KRAId": kraData[item].KRAId,
+                "UOMId": kraData[item].UOMId,
+                "BaseTarget": kraData[item].BaseTarget,
+                "CommentsForKRA": kraData[item].CommentsForKRA,
+                "CommentsForKRAByMgr": kraData[item].CommentsForKRAByMgr,
+                "CommentsForKRAByHOD": kraData[item].CommentsForKRAByHOD,
+                "MgrComments1": kraData[item].MgrComments1,
+                "ReviwerComments1": kraData[item].ReviwerComments1,
+                "Quaterly2EmpKRAComments": kraData[item].Quaterly2EmpKRAComments,
+                "Quaterly2MgrKRAComments": kraData[item].Quaterly2MgrKRAComments,
+                "Quaterly2ReviewerKRAComments": kraData[item].Quaterly2MgrKRAComments,
+                "AchievedTargetBySelf": kraData[item].AchievedTargetBySelf == null ? "" : kraData[item].AchievedTargetBySelf,
+                "AchievedPercentBySelf": kraData[item].AchievedPercentBySelf == null ? "" : kraData[item].AchievedPercentBySelf,
+                "FinalScoreBySelf": kraData[item].FinalScoreBySelf == null ? "" : kraData[item].FinalScoreBySelf,
+                "FinalSelfComments": kraData[item].FinalSelfComments,
+                "FinalMgrComments": kraData[item].FinalMgrComments,
+                "FinalReviwerComments": kraData[item].FinalReviwerComments,
+                "CompeletionDate": kraData[item].CompeletionDate,
+                "RatingScale": kraData[item].RatingScale == null ? "" : kraData[item].RatingScale,
+                "ClassId": kraData[item].ClassId,
+                "AchievedPercentBySystem": kraData[item].AchievedPercentBySystem == null ? "" : kraData[item].AchievedPercentBySystem,
+                "TasksByEmpObjective": kraData[item].TasksByEmpObjective,
+                "TasksByEmpMidyear": kraData[item].TasksByEmpMidyear,
+                "EWeightage": kraData[item].EWeightage,
+                "ETarget": kraData[item].ETarget,
+                "ETargetDate": kraData[item].ETargetDate,
+                "SubKRACnt": kraData[item].SubKRACnt,
+                "AppraisalStartDate": formData.AppraisalStartDate,
+                "AppraisalEndDate": formData.AppraisalEndDate,
+                "FinalFrom": formData.FinalFrom,
+                "FinalTo": formData.FinalTo,
+                "EmployeeID": commentData.EmployeeID,
+                "StartDate": commentData.StartDate,
+                "EndDate": commentData.EndDate,
+                "TemplateID": commentData.TemplateID,
+                "ForYear": commentData.ForYear,
+                "ObjAppraiseeComments": commentData.ObjAppraiseeComments,
+                "ObjAppraiserComments": commentData.ObjAppraiserComments,
+                "ObjReviewerComments": commentData.ObjReviewerComments,
+                "ObjHODComments": commentData.ObjHODComments,
+                "Quaterly2AppraiseeComments": commentData.Quaterly2AppraiseeComments,
+                "Quaterly2AppraiserComments": commentData.Quaterly2AppraiserComments,
+                "Quaterly2ReviewerComments": commentData.Quaterly2ReviewerComments,
+                "FinalAppraiseeComments": commentData.FinalAppraiseeComments,
+                "FinalAppraiserComments": commentData.FinalAppraiserComments,
+                "FinalReviewerComments": commentData.FinalReviewerComments,
+                "FinalHODComments": commentData.FinalHODComments,
+                "FinalHRComments": commentData.FinalHRComments,
+                "Quaterly3AppraiseeComments": commentData.Quaterly3AppraiseeComments,
+                "Quaterly3AppraiserComments": commentData.Quaterly3AppraiserComments,
+                "Quaterly3ReviewerComments": commentData.Quaterly3ReviewerComments,
+                "MidAppraiseeComments": commentData.MidAppraiseeComments,
+                "MidAppraiserComments": commentData.MidAppraiserComments,
+                "MidReviewerComments": commentData.MidReviewerComments,
+                "MidHODComments": commentData.MidHODComments,
+                "Quaterly4AppraiseeComments": commentData.Quaterly4AppraiseeComments,
+                "Quaterly4AppraiserComments": commentData.Quaterly4AppraiserComments,
+                "Quaterly4ReviewerComments": commentData.Quaterly4ReviewerComments,
+                "Id": formData.Id,
+                "TemplateYear": formData.TemplateYear,
+                "ObjPeriodFrom": formData.ObjPeriodFrom,
+                "ObjPeriodTo": formData.ObjPeriodTo,
+                "Quaterly2From": formData.Quaterly2From,
+                "Quaterly2To": formData.Quaterly2To,
+                "IsMidEditable": formData.IsMidEditable,
+                "CompanyCodeNo": formData.CompanyCodeNo,
+                "MinDate": formData.MinDate == null ? "" : formData.MinDate,
+                "MaxDate": formData.MaxDate,
+                "Quaterly3PeriodFrom": formData.Quaterly3PeriodFrom == null ? "" : formData.Quaterly3PeriodFrom,
+                "Quaterly3PeriodTo": formData.Quaterly3PeriodTo == null ? "" : formData.Quaterly3PeriodTo,
+                "Quaterly4PeriodFrom": formData.Quaterly4PeriodFrom == null ? "" : formData.Quaterly4PeriodFrom,
+                "Quaterly4PeriodTo": formData.Quaterly4PeriodTo == null ? "" : formData.Quaterly4PeriodTo,
+                "MidYearEvaluationFrom": formData.MidYearEvaluationFrom,
+                "MidYearEvaluationTo": formData.MidYearEvaluationTo,
+                "PMSCycleType": formData.PMSCycleType,
+                "FormDisabled": formData.FormDisabled,
+                "Mgr_Reviwer_Status": "",
+                "Status": Status
+            })
+
+        })
+
+        var response1 = await SaveKRADetails(userProps.userId, userProps.companyCode, userProps.userRole, goalSettingData, userProps.baseUrl)
+        console.log("dattaaatt", response1);
+    }
+
+
 
 
     return (
@@ -206,7 +334,7 @@ const PmsHome = (props) => {
                                     </TouchableOpacity>
                                     <View style={{ height: data.detailExpanded ? null : 0, overflow: 'hidden' }}>
                                         <Divider />
-                                        <Card style={{ margin: 20,  }}>
+                                        <Card style={{ margin: 20, }}>
                                             <View style={{ backgroundColor: userProps.primaryColor, borderRadius: 3, paddingBottom: 10 }}>
                                                 <View style={{ flexDirection: 'row', borderRadius: 3 }}>
                                                     <View style={{ margin: 5, }}>
@@ -288,20 +416,52 @@ const PmsHome = (props) => {
                                     <View style={{ padding: 10 }}>
 
                                         <Card style={[{ borderTopColor: userProps.secColor, borderTopWidth: 2.5 }]}>
-                                            <TouchableOpacity activeOpacity={0.8} onPress={() => { changeLayout("goalSetting") }} style={[styles.FormTabs, { backgroundColor: colors.background }]}>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={[styles.btnText, { fontSize: userProps.F2, color: colors.text }]}>GOAL SETTING</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                            <View style={{ height: data.goalExpanded ? 400 : 0, overflow: 'hidden', backgroundColor: colors.background }}>
-                                                <Divider />
-                                                <Pages indicatorColor={'transparent'} >
-                                                    {
-                                                        (data.kraData.KRADetails).map((item, index) =>
-                                                            <KRADetail kraData={item} count={index} total={data.kraData.KRADetails.length} />
-                                                        )
-                                                    }
-                                                </Pages>
+                                            <View style={{}}>
+                                                <TouchableOpacity activeOpacity={0.8} onPress={() => { changeLayout("goalSetting") }} style={[styles.FormTabs, { backgroundColor: colors.background }]}>
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        <Text style={[styles.btnText, { fontSize: userProps.F2, color: colors.text }]}>GOAL SETTING</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                                {data.goalExpanded ?
+                                                    <View style={{ overflow: 'hidden', backgroundColor: colors.background }}>
+                                                        <Divider />
+                                                        <View style={{ height: 390, backgroundColor: 'transparent' }}>
+                                                            <Pages indicatorColor={'transparent'} >
+                                                                {
+                                                                    (data.kraData.KRADetails).map((item, index) => (
+                                                                        Weightage = parseFloat(Weightage + item.Weightage),
+                                                                        <KRADetail kraData={item} count={index} total={data.kraData.KRADetails.length} />
+                                                                    ))
+                                                                }
+                                                            </Pages>
+                                                        </View>
+                                                        <View style={{ justifyContent: 'center', alignItems: 'center', margin: 10, }}>
+                                                            <Button mode="contained" color={userProps.primaryColor} onPress={() => props.navigation.navigate("AddRemoveKRA",{FormData: 90})} style={{ width: '70%' }}>
+                                                                ADD / Remove KRA
+                                                            </Button>
+                                                        </View>
+                                                        <View style={{ padding: 10, backgroundColor: colors.background }}>
+                                                            <Text style={[styles.btnText, { fontSize: userProps.F2, color: colors.text, fontWeight: 'bold', marginBottom: 5 }]}>{`Total Weightage: ${Weightage}`}</Text>
+                                                            <Text style={[styles.btnText, { fontSize: userProps.F2, color: colors.text, fontWeight: 'bold', marginBottom: 3 }]}>{`OvarAll Comments`}</Text>
+                                                            {
+                                                                (data.kraData.OverallComments).map((item, index) => (
+                                                                    <CommentModel data={item} header={"Appraisee"} />
+                                                                ))
+                                                            }
+                                                        </View>
+                                                        <View style={{ flexDirection: 'row', margin: 10, justifyContent: 'space-around', alignItems: 'center' }}>
+                                                            <Button icon="content-save" mode="contained" color={userProps.primaryColor} onPress={() => SaveGoalSetting("appraisee - saved")} style={{ width: '40%',  }}>
+                                                                SAVE
+                                                            </Button>
+                                                            {/* //icon="near-me" */}
+                                                            <Button icon="near-me"  mode="contained" color={userProps.primaryColor} onPress={() => console.log(data.kraData.KRADetails)} style={{ width: '40%' }}>
+                                                                SUBMIT
+                                                            </Button>
+                                                        </View>
+
+                                                    </View>
+                                                    : null
+                                                }
                                             </View>
                                         </Card>
 

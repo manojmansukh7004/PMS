@@ -5,14 +5,12 @@ import { useTheme } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 const KRADetail = (props) => {
     const { colors } = useTheme();
-    useEffect(() => {
-        // console.log( "pppppp",props.count, props.total);
-    })
+   
 
     return (
         <ScrollView nestedScrollEnabled={true}        >
         <Card style={[styles.Container,{backgroundColor: colors.background}]}>
-            <Text style={{paddingBottom: 8, color: colors.text}}>{`Showing ${props.count} of ${props.total}`}</Text>
+            <Text style={{paddingBottom: 8, color: colors.text}}>{`Showing ${props.count  + 1} of ${props.total}`}</Text>
             <View style={[styles.table,{borderColor: colors.text, }]}>
                 <View style={[styles.shortView,{ borderRightColor: colors.text}]}>
                     <Text style={[styles.text,{color: colors.text}]}> Sr. No. </Text>

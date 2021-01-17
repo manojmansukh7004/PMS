@@ -3,6 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import Example from '../pages/Example'
 import PmsHome from '../pages/appraiess/PmsHome';
+import AddRemoveKRA from '../pages/appraiess/AddRemoveKRA';
 import KraDetails from '../pages/appraiess/KraDetails';
 import PmsHome2 from '../pages/appraieser/PmsHome2';
 import ProbationConfirmation from '../pages/appraieser/ProbationConfirmation';
@@ -37,7 +38,7 @@ const PMS = (props) => {
           ) 
          }}
       />
-
+      <Stack.Screen name="AddRemoveKRA" component={AddRemoveKRA}  options={{title: "Add / Remove KRA", headerStyle:{backgroundColor: userProps.primaryColor}}}/>
       <Stack.Screen name="KraDetails" component={KraDetails} />
     </Stack.Navigator>
   );

@@ -1,5 +1,4 @@
-
-async function FetchKRADetails(empId, companyCode, userRole, formid, templateId, baseUrl) {
+async function FetchKRAAspectMeasure(empId, companyCode, userRole, baseUrl) {
   
     const payload= {
         "loginDetails":
@@ -8,10 +7,8 @@ async function FetchKRADetails(empId, companyCode, userRole, formid, templateId,
           "loginEmpCompanyCodeNo": companyCode,
           "currentRole": userRole
         },
-        "kra": {
+        "data": {
           "UserId": empId,
-          "Formid": formid,
-          "TemplateId": templateId
         }
 }
 
@@ -22,7 +19,7 @@ async function FetchKRADetails(empId, companyCode, userRole, formid, templateId,
       return {};
     });
   
-    const response = await fetch(`${baseUrl}/api/ObjectiveSetting/FetchKRADetails`, {
+    const response = await fetch(`${baseUrl}/api/ObjectiveSetting/FetchKRAAspectMeasure`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -35,5 +32,5 @@ async function FetchKRADetails(empId, companyCode, userRole, formid, templateId,
     return responseJson;
   }
   
-  export { FetchKRADetails };
+  export { FetchKRAAspectMeasure };
   
