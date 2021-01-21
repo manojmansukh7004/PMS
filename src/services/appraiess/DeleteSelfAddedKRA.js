@@ -1,5 +1,4 @@
-
-async function FetchKRADetails(empId, companyCode, userRole, formid, templateId, baseUrl) {
+async function DeleteSelfAddedKRA(empId, companyCode, userRole, formid, templateId, autoId, baseUrl) {
   
     const payload= {
         "loginDetails":
@@ -11,10 +10,10 @@ async function FetchKRADetails(empId, companyCode, userRole, formid, templateId,
         "kra": {
           "UserId": empId,
           "Formid": formid,
-          "TemplateId": templateId
+          "TemplateId": templateId,
+          "AutoId": autoId
         }
 }
-console.log("payloadpayload",payload);
     const formBody = JSON.stringify(payload, (key, value) => {
       if (value !== null) {
         return value;
@@ -22,7 +21,7 @@ console.log("payloadpayload",payload);
       return {};
     });
   
-    const response = await fetch(`${baseUrl}/api/ObjectiveSetting/FetchKRADetails`, {
+    const response = await fetch(`${baseUrl}/api/ObjectiveSetting/DeleteSelfAddedKRA`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -35,5 +34,5 @@ console.log("payloadpayload",payload);
     return responseJson;
   }
   
-  export { FetchKRADetails };
+  export { DeleteSelfAddedKRA };
   

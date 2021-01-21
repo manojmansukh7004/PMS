@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Example from '../pages/Example'
 import PmsHome from '../pages/appraiess/PmsHome';
 import AddRemoveKRA from '../pages/appraiess/AddRemoveKRA';
-import KraDetails from '../pages/appraiess/KraDetails';
+import SubKraDetails from '../pages/appraiess/SubKraDetails';
 import PmsHome2 from '../pages/appraieser/PmsHome2';
 import ProbationConfirmation from '../pages/appraieser/ProbationConfirmation';
 import DrawerContent from '../navigation/DrawerContent'
@@ -39,7 +39,7 @@ const PMS = (props) => {
          }}
       />
       <Stack.Screen name="AddRemoveKRA" component={AddRemoveKRA}  options={{title: "Add / Remove KRA", headerStyle:{backgroundColor: userProps.primaryColor}}}/>
-      <Stack.Screen name="KraDetails" component={KraDetails} />
+      <Stack.Screen name="SubKraDetails" component={SubKraDetails} options={{title: "KRA Details"}}/>
     </Stack.Navigator>
   );
 }

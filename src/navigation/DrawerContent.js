@@ -78,7 +78,7 @@ const DrawerContent = (props) => {
                         <List.Item
                             titleNumberOfLines={3}
                             left={props => <List.Icon {...props} icon="bullhorn" />}
-                            onPress={() => { props.navigation.navigate('KraDetails') }}
+                            // onPress={() => { props.navigation.navigate('KraDetails') }}
                             title={"Recommended KRA"} />
 
                         <List.Item

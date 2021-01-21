@@ -7,8 +7,7 @@ import { ActivityIndicator, Divider } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
-import GestureRecognizer from 'react-native-swipe-gestures';
-import { Indicator, Pages } from 'react-native-pages';
+import { Pages } from 'react-native-pages';
 
 import { GetTemplates } from '../../services/appraiess/GetTemplates'
 import { FetchKRADetails } from '../../services/appraiess/FetchKRADetails'
@@ -17,7 +16,7 @@ import { SaveKRADetails } from '../../services/appraiess/SaveKRADetails'
 import allAction from '../../redux/actions';
 import CommentModel from '../../component/CommentModel';
 
-var Weightage = 0
+var Weightage = 0.00
 const PmsHome = (props) => {
 
     const { colors } = useTheme();
@@ -89,7 +88,9 @@ const PmsHome = (props) => {
     }, [data.templates])
 
     const selectedTemplate = (itemValue) => {
+        console.log("pppppp", itemValue);
         Weightage = 0
+        var id = itemValue.split("~")[1]
         setdata({
             ...data,
             kraDataVisible: false,
@@ -101,7 +102,7 @@ const PmsHome = (props) => {
             attachments: false,
             appraisallog: false,
             selectedTemplate: itemValue,
-            formId: itemValue.split("~")[1].trim(),
+            formId: id == undefined ? "" : id,
             templateId: data.templates.find(({ col1 }) => col1 === itemValue).TemplateId,
         })
     }
@@ -109,6 +110,7 @@ const PmsHome = (props) => {
     useEffect(() => {
         async function fetchData() {
             var response = await FetchKRADetails(userProps.userId, userProps.companyCode, userProps.userRole, data.formId, data.templateId, userProps.baseUrl)
+            // console.log("fffffffff",response,  data.formId);
             setdata({
                 ...data,
                 kraData: response,
@@ -430,13 +432,13 @@ const PmsHome = (props) => {
                                                                 {
                                                                     (data.kraData.KRADetails).map((item, index) => (
                                                                         Weightage = parseFloat(Weightage + item.Weightage),
-                                                                        <KRADetail kraData={item} count={index} total={data.kraData.KRADetails.length} />
+                                                                        <KRADetail props={props} kraData={item} count={index} total={data.kraData.KRADetails.length} />
                                                                     ))
-                                                                }
+                                                                } 
                                                             </Pages>
                                                         </View>
                                                         <View style={{ justifyContent: 'center', alignItems: 'center', margin: 10, }}>
-                                                            <Button mode="contained" color={userProps.primaryColor} onPress={() => props.navigation.navigate("AddRemoveKRA",{FormData: 90})} style={{ width: '70%' }}>
+                                                            <Button mode="contained" color={userProps.primaryColor} onPress={() => props.navigation.navigate("AddRemoveKRA",{"FormData": data.kraData.FormDetails[0],"FormId": data.kraData.OverallComments[0].FormID})} style={{ width: '70%' }}>
                                                                 ADD / Remove KRA
                                                             </Button>
                                                         </View>

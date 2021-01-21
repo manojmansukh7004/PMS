@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Card, } from 'react-native-paper';
 import { useTheme } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon1 from 'react-native-vector-icons/FontAwesome5'
+
 const KRADetail = (props) => {
     const { colors } = useTheme();
    
-
     return (
         <ScrollView nestedScrollEnabled={true}        >
         <Card style={[styles.Container,{backgroundColor: colors.background}]}>
@@ -28,12 +29,16 @@ const KRADetail = (props) => {
                 </View>
             </View> 
             <View style={[styles.table,{borderColor: colors.text}]}>
-            <View style={[styles.shortView,{ borderRightColor: colors.text}]}>
+            <View style={[styles.shortView,{ borderRightColor: colors.text, }]}>
                 <Text style={[styles.text,{color: colors.text}]}> Key Result Area </Text>
                 </View>
-                <View style={styles.longView}>
-                    <Text style={{color: colors.text}} > {props.kraData.LongDesc} </Text>
-                </View>
+                <TouchableOpacity onPress={()=>{props.props.navigation.navigate('SubKraDetails',{ item: props.kraData})}}
+                    style={[styles.longView, {display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}]}>
+                    <Text style={{color: 'blue'}} > {props.kraData.LongDesc}
+                    <View style={{width: 5}}/>
+                    <Icon1 name={'external-link-alt'} size= {15} style={{marginLeft:5}}  color={'blue'}/>
+                    </Text>
+                </TouchableOpacity>
             </View>
             <View style={[styles.table,{borderColor: colors.text}]}>
             <View style={[styles.shortView,{ borderRightColor: colors.text}]}>
